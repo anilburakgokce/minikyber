@@ -7,8 +7,14 @@ A minimal C implementation of a Kyber-like post-quantum key encapsulation mechan
 - Simple modular arithmetic over small primes
 - Bit-based message encoding and decoding
 - Basic CPA-secure key encapsulation and decapsulation
-- Depends on the `getrandom` function from the Linux C library `sys/random.h`
 - Easily readable
+
+## Dependencies
+
+- `getrandom` function from the Linux C library `sys/random.h`
+- `stdio.h`
+- `string.h`
+- `inttypes.h`
 
 ## Parameters
 
