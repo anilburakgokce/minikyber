@@ -2,15 +2,37 @@
 #include "utils.h"
 
 void encode(poly *p, const u8 *m){
-    for(int i = 0; i < kyber_n; i++){
-        p->coeffs[i] = (((m[0] >> i) & 0x01) == 1) ? kyber_q/2 : 0;
+    // handle all bytes but not the most significant one
+    for(int i = 0; i < kyber_mlen - 1; i++){
+        for(int j = 0; j < 8*sizeof(u8); j++){
+            p->coeffs[i*8*sizeof(u8) + j] = (((m[i] >> j) & 0x01) == 1) ? kyber_q/2 : 0;
+            // printf("j = %d\n", j);
+            // PrintPoly(p);
+            // printf("\n");
+        }
+    }
+
+    // handle the last byte
+    for(int i = 8 * (kyber_mlen - 1); i < kyber_mlen_bits; i++){
+        p->coeffs[i] = (((m[kyber_mlen-1] >> (i&0x7)) & 0x01) == 1) ? kyber_q/2 : 0;
     }
 }
 
 void decode(u8 *m, const poly *p){
     memset(m, 0, kyber_mlen);
-    for(int i = 0; i < kyber_n; i++){
-        m[0] |= ((p->coeffs[i]>kyber_q/4 && p->coeffs[i]<=3*(kyber_q/4)) ? 0x01 : 0x00) << i;
+
+    // handle all bytes but not the most significant one
+    for(int i = 0; i < kyber_mlen - 1; i++){
+        for(int j = 0; j < 8*sizeof(u8); j++){
+            i16 coeff = p->coeffs[i*8*sizeof(u8)+j];
+            m[i] |= ((coeff>kyber_q/4 && coeff<=3*(kyber_q/4)) ? 0x01 : 0x00) << j;
+        }
+    }
+
+    // handle the last byte
+    for(int i = 8 * (kyber_mlen - 1); i < kyber_mlen_bits; i++){
+            i16 coeff = p->coeffs[i];
+            m[kyber_mlen - 1] |= ((coeff>kyber_q/4 && coeff<=3*(kyber_q/4)) ? 0x01 : 0x00) << (i&0x07);
     }
 }
 

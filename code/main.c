@@ -3,10 +3,15 @@
 #include "utils.h"
 
 void TestMul(){
-#if 1
+#if 0
     poly a = {3,6,2,13}, b = {16,4,11,3}, c = {0};
-#else
+#elif 0
     poly a = {11,15,1,9}, b = {13,1,1,10}, c = {0};
+#else
+    poly a = {0}, b = {0,1}, c = {0};
+    for(int i = 0; i < kyber_n; i++){
+        a.coeffs[i] = 1;
+    }
 #endif
     // for(int i = 0; i < kyber_k; i++){
     //     sample_random_poly(a.elements + i);
@@ -108,29 +113,26 @@ void TestMVmulTranspose(){
 }
 
 void TestEncodeDecode(){
-    u8 buf1[kyber_mlen] = {0}, buf2[kyber_mlen] = {0};
+    u8 buf1[kyber_mlen] = {0x15, 0x17}, buf2[kyber_mlen] = {0};
     getrandom(buf1, kyber_mlen, 0);
-    for(int i = 0; i < kyber_mlen; i++){
-        buf1[i] %= kyber_q;
-    }
 
     poly p1 = {0}, p2 = {0};
-    encode(&p1, buf1);
-    decode(buf2, &p1);
-    encode(&p2, buf2);
 
     printf("buf1: ");
     PrintArray(buf1, kyber_mlen);
     printf("\n");
 
+    encode(&p1, buf1);
     printf("p1: ");
     PrintPoly(&p1);
     printf("\n");
 
+    decode(buf2, &p1);
     printf("buf2: ");
     PrintArray(buf2, kyber_mlen);
     printf("\n");
 
+    encode(&p2, buf2);
     printf("p2: ");
     PrintPoly(&p2);
     printf("\n");
@@ -251,6 +253,7 @@ int TestFull(){
 }
 
 int main(){
+#if 1 // for full test
     int res = 0;
     for(int i = 0; i < (1<<16); i++){
         res = TestFull();
@@ -260,5 +263,10 @@ int main(){
         }
     }
     printf("Test Ended with %s!\n", (res == 0) ? "success" : "failure");
+#else // microtests
+
+    TestEncodeDecode();
+
+#endif
     return 0;
 }

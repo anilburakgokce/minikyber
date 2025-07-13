@@ -63,7 +63,7 @@ void MV_mul_transpose(poly_vec *res, const poly_mat * M, const poly_vec *v){
     }
 }
 
-// generates a polynomial from seed
+// generates a polynomial matrix from seed
 // seed: a u8 array of length kyber_seedlen
 void GenerateA(poly_mat *A, const u8 *seed){
     for(int i = 0; i < kyber_k; i++){
