@@ -18,8 +18,8 @@ A minimal C implementation of a Kyber-like post-quantum key encapsulation mechan
 
 ## Parameters
 
-- q = 97
-- n = 4 (polynomial degree)
+- q = 3329
+- n = 32 (polynomial degree)
 - Coefficients in {-1,0,1} for small polynomials
 
 ## Build and Run
