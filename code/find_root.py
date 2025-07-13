@@ -19,14 +19,14 @@ def modexp(base, exp, mod):
     return res
 
 
-n = 3329
-deg = 32
+q = 3329
+n = 32
 
 root = 0
 root_set = False
-for i in range(n):
-    res = modexp(i, deg//2, n)
-    if(res == (n - 1)):
+for i in range(q):
+    res = modexp(i, n//2, q)
+    if(res == (q - 1)):
         root = i
         root_set = True
         break
