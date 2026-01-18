@@ -1,8 +1,0 @@
-{
-    "files.associations": {
-        "minikyber.h": "c",
-        "stdio.h": "c",
-        "utils.h": "c",
-        "random": "c"
-    }
-}
