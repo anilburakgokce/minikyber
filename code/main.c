@@ -2,6 +2,25 @@
 #include "minikyber.h"
 #include "utils.h"
 
+void TestModExp(){
+    u8 random_bytes[4] = {0};
+    getrandom(random_bytes, 4, 0);
+    i16 base = (((uint16_t) random_bytes[0]) + (((uint16_t) random_bytes[1]) << 8)) % kyber_q;
+    int exp = ((uint32_t) random_bytes[0]) + (((uint32_t) random_bytes[1]) << 8);
+
+    i16 res = modexp(base, exp, kyber_q);
+
+    i16 correct = 1;
+    for(int i = 0; i < exp; i++){
+        correct = (correct * base) % kyber_q ;
+    }
+
+    printf("%d**%d:\n", base, exp);
+    printf("res: %d\n", res);
+    printf("correct: %d\n", correct);
+    
+}
+
 void TestMul(){
 #if 0
     poly a = {3,6,2,13}, b = {16,4,11,3}, c = {0};
@@ -253,7 +272,7 @@ int TestFull(){
 }
 
 int main(){
-#if 1 // for full test
+#if 0 // for full test
     int res = 0;
     for(int i = 0; i < (1<<16); i++){
         res = TestFull();
@@ -265,7 +284,7 @@ int main(){
     printf("Test Ended with %s!\n", (res == 0) ? "success" : "failure");
 #else // microtests
 
-    TestEncodeDecode();
+    TestModExp();
 
 #endif
     return 0;

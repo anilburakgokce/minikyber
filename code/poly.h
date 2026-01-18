@@ -23,4 +23,6 @@ void encode(poly *p, const u8 *m);
 void decode(u8 *m, const poly *p);
 void modq(poly *p);
 
+i16 modexp(i16 base, int exp, int mod);
+
 #endif

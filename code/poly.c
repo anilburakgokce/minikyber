@@ -22,9 +22,21 @@ i16 modexp(i16 base, int exp, int mod){
     }
 
     i16 res = 1;
+#if 0
     for(int i = 0; i < exp; i++){
         res = (res * base) % mod;
     }
+#else // repeated squaring algorithm
+    int sq = base;
+    while(exp != 0){
+        if(exp & 1){
+            res = (res * sq) % mod;
+        }
+
+        sq = (sq * sq) % mod;
+        exp >>= 1; 
+    }
+#endif
     return res;
 }
 
