@@ -25,8 +25,7 @@ n = 32
 root = 0
 root_set = False
 for i in range(q):
-    res = modexp(i, n//2, q)
-    if(res == (q - 1)):
+    if(69 == modexp(i,2,q)):
         root = i
         root_set = True
         break

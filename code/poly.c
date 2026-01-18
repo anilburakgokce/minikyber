@@ -1,6 +1,33 @@
 #include "poly.h"
 #include "utils.h"
 
+i16 modexp(i16 base, int exp, int mod){
+    if(exp < 0){
+        // printf("Exponent is less than 0!\n");
+        return -1;
+    }
+    if(mod < 0){
+        // printf("Mod is less than 0!");
+        return -1;
+    }
+    if(base < 0){
+        // printf("Base is less than 0!");
+        return -1;
+    }
+    if(base == 0){
+        return 0;
+    }
+    if(base > mod){
+        base = base % mod;
+    }
+
+    i16 res = 1;
+    for(int i = 0; i < exp; i++){
+        res = (res * base) % mod;
+    }
+    return res;
+}
+
 void encode(poly *p, const u8 *m){
     // handle all bytes but not the most significant one
     for(int i = 0; i < kyber_mlen - 1; i++){
@@ -122,3 +149,35 @@ void sample_random_poly(poly *out){
     }
 }
 
+void ntt_wrapper(poly *a_ntt, const poly *a){
+    ntt(a_ntt->coeffs, a->coeffs, kyber_n);
+}
+
+// len is a power of 2
+void ntt(i16 *out, i16* in, int len){
+    if(len == 1){
+        out[0] = in[0];
+        return;
+    }
+
+    for(int i = 0; i < len/2; i++){
+        out[i] = in[2*i];
+        out[i+len/2] = in[2*i+1];
+    }
+
+    for(int i = 0; i < len; i++){
+        in[i] = out[i];
+    }
+
+    ntt(out, in, len/2);
+    ntt(out + len/2, in + len/2, len/2);;
+
+    for(int i = 0; i < len; i++){
+        in[i] = out[i];
+    }
+
+    for(int i = 0; i < len/2; i++){
+        out[i] = in[i] + modexp(kyber_root, i, kyber_q) * in[i + len/2];
+        out[i+len/2] = in[i] - modexp(kyber_root, i, kyber_q) * in[i + len/2];
+    }
+}
